@@ -49,57 +49,14 @@ body {
   line-height: 1.6;
 }
 
-/* Ambient Animation Background */
-.ambient-glow {
+/* Ambient Canvas Particles */
+.particle-canvas {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(130px);
-  opacity: var(--orb-opacity);
-  animation: float 25s infinite alternate ease-in-out;
-  transition: opacity 0.5s ease;
-}
-
-.orb-1 {
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
-  top: -10%;
-  left: -10%;
-}
-
-.orb-2 {
-  width: 550px;
-  height: 550px;
-  background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
-  bottom: -15%;
-  right: -10%;
-  animation-delay: -5s;
-}
-
-.orb-3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, var(--accent-teal) 0%, transparent 70%);
-  top: 40%;
-  left: 50%;
-  animation-delay: -10s;
-}
-
-@keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(60px, 90px) scale(1.1); }
-  100% { transform: translate(-40px, -50px) scale(0.9); }
 }
 
 /* Layout Wrapper */
