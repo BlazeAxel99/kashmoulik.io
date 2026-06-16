@@ -6,10 +6,15 @@ interface Point3D {
   z: number;
   px?: number;
   py?: number;
+  vx: number;
+  vy: number;
+  vz: number;
+  baseSize: number;
 }
 
 export default function ThreeCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,116 +23,138 @@ export default function ThreeCanvas() {
     if (!ctx) return;
 
     let animationId: number;
-    let width = (canvas.width = canvas.offsetWidth);
-    let height = (canvas.height = canvas.offsetHeight);
+    let width = 0;
+    let height = 0;
 
+    const resize = () => {
+      if (!canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Mouse tracking for parallax
+    const handleMouse = (e: MouseEvent) => {
+      mouseRef.current.x = e.clientX / window.innerWidth;
+      mouseRef.current.y = e.clientY / window.innerHeight;
+    };
+    window.addEventListener('mousemove', handleMouse);
+
+    // Create floating particles in 3D space
     const points: Point3D[] = [];
-    const numPoints = 35;
-    const radius = Math.min(width, height) * 0.35;
+    const numPoints = 80;
+    const spread = Math.max(width, height) * 0.6;
 
-    // Create a sphere of 3D points
     for (let i = 0; i < numPoints; i++) {
-      const u = Math.random();
-      const v = Math.random();
-      const theta = u * 2.0 * Math.PI;
-      const phi = Math.acos(2.0 * v - 1.0);
-      
       points.push({
-        x: radius * Math.sin(phi) * Math.cos(theta),
-        y: radius * Math.sin(phi) * Math.sin(theta),
-        z: radius * Math.cos(phi)
+        x: (Math.random() - 0.5) * spread * 2,
+        y: (Math.random() - 0.5) * spread * 1.2,
+        z: Math.random() * 600 - 300,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.2,
+        vz: (Math.random() - 0.5) * 0.15,
+        baseSize: Math.random() * 2 + 1,
       });
     }
 
-    let angleX = 0.002;
-    let angleY = 0.003;
+    const fov = 500;
+    const connectionDist = 180;
 
-    const rotateX = (point: Point3D, angle: number) => {
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-      const y1 = point.y * cos - point.z * sin;
-      const z1 = point.z * cos + point.y * sin;
-      point.y = y1;
-      point.z = z1;
+    // Cache color values outside render loop
+    let cachedCyan = '#00f2fe';
+    let cachedIsDark = true;
+    const updateColors = () => {
+      cachedCyan = getComputedStyle(document.documentElement).getPropertyValue('--accent-cyan').trim() || '#00f2fe';
+      cachedIsDark = document.documentElement.getAttribute('data-theme') !== 'light';
     };
-
-    const rotateY = (point: Point3D, angle: number) => {
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-      const x1 = point.x * cos - point.z * sin;
-      const z1 = point.z * cos + point.x * sin;
-      point.x = x1;
-      point.z = z1;
-    };
-
-    const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    const fov = 400; // Field of view / distance
+    updateColors();
+    // Update colors only when theme changes
+    const observer = new MutationObserver(updateColors);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
-      
-      // Update & project points
-      points.forEach(p => {
-        rotateX(p, angleX);
-        rotateY(p, angleY);
 
-        // Perspective projection
+      // Mouse parallax offset
+      const mx = (mouseRef.current.x - 0.5) * 30;
+      const my = (mouseRef.current.y - 0.5) * 20;
+
+      // Update and project
+      points.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+
+        // Wrap around boundaries
+        const halfSpread = spread * 1.2;
+        if (p.x > halfSpread) p.x = -halfSpread;
+        if (p.x < -halfSpread) p.x = halfSpread;
+        if (p.y > halfSpread * 0.6) p.y = -halfSpread * 0.6;
+        if (p.y < -halfSpread * 0.6) p.y = halfSpread * 0.6;
+        if (p.z > 300) p.z = -300;
+        if (p.z < -300) p.z = 300;
+
+        // Perspective projection with mouse parallax
         const scale = fov / (fov + p.z);
-        p.px = p.x * scale + width / 2;
-        p.py = p.y * scale + height / 2;
+        p.px = (p.x + mx * (p.z / 300)) * scale + width / 2;
+        p.py = (p.y + my * (p.z / 300)) * scale + height / 2;
       });
 
-      // Get color tokens from root
-      const cyan = getComputedStyle(document.documentElement).getPropertyValue('--accent-cyan').trim() || '#00f2fe';
-      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+      // Parse cyan color for rgba
+      const isLightCyan = cachedCyan.includes('0284c7');
+      const r = isLightCyan ? 2 : 0;
+      const g = isLightCyan ? 132 : 242;
+      const b = isLightCyan ? 199 : 254;
+      const baseAlpha = cachedIsDark ? 1 : 0.6;
 
       // Draw connections
-      ctx.lineWidth = 0.75;
+      ctx.lineWidth = 0.8;
       for (let i = 0; i < points.length; i++) {
         for (let j = i + 1; j < points.length; j++) {
-          const dx = points[i].x - points[j].x;
-          const dy = points[i].y - points[j].y;
-          const dz = points[i].z - points[j].z;
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          const dx = (points[i].px! - points[j].px!);
+          const dy = (points[i].py! - points[j].py!);
+          const screenDist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < radius * 0.75) {
-            ctx.beginPath();
-            ctx.moveTo(points[i].px!, points[i].py!);
-            ctx.lineTo(points[j].px!, points[j].py!);
-            
-            // Fade lines based on depth and distance
-            const avgDepth = (points[i].z + points[j].z) / (radius * 2); // -0.5 to 0.5
-            const depthAlpha = Math.max(0.1, 0.6 - (avgDepth + 0.5));
-            const distAlpha = (radius * 0.75 - dist) / (radius * 0.75);
-            const finalAlpha = depthAlpha * distAlpha * (isDark ? 0.35 : 0.2);
+          if (screenDist < connectionDist) {
+            const avgDepth = ((points[i].z + points[j].z) / 2 + 300) / 600; // 0 (far) to 1 (near)
+            const distFade = 1 - screenDist / connectionDist;
+            const alpha = distFade * avgDepth * 0.25 * baseAlpha;
 
-            ctx.strokeStyle = cyan === '#0284c7'
-              ? `rgba(2, 132, 199, ${finalAlpha})`
-              : `rgba(0, 242, 254, ${finalAlpha})`;
-            ctx.stroke();
+            if (alpha > 0.02) {
+              ctx.beginPath();
+              ctx.moveTo(points[i].px!, points[i].py!);
+              ctx.lineTo(points[j].px!, points[j].py!);
+              ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+              ctx.stroke();
+            }
           }
         }
       }
 
-      // Draw nodes
+      // Draw nodes with glow
       points.forEach(p => {
+        const depth = (p.z + 300) / 600; // 0 (far) to 1 (near)
         const scale = fov / (fov + p.z);
-        const size = Math.max(1, (p.z + radius) / radius * 2 + 1) * scale;
-        
+        const size = p.baseSize * scale * (0.5 + depth * 0.8);
+        const alpha = (0.15 + depth * 0.7) * baseAlpha;
+
+        // Glow for nearby particles
+        if (depth > 0.6 && size > 1.5) {
+          ctx.beginPath();
+          ctx.arc(p.px!, p.py!, size * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.08})`;
+          ctx.fill();
+        }
+
         ctx.beginPath();
         ctx.arc(p.px!, p.py!, size, 0, Math.PI * 2);
-        
-        // Depth shading
-        const depthFactor = (p.z + radius) / (radius * 2); // 0 (back) to 1 (front)
-        ctx.fillStyle = cyan === '#0284c7'
-          ? `rgba(2, 132, 199, ${Math.max(0.2, depthFactor)})`
-          : `rgba(0, 242, 254, ${Math.max(0.2, depthFactor)})`;
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
         ctx.fill();
       });
 
@@ -138,7 +165,9 @@ export default function ThreeCanvas() {
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouse);
+      observer.disconnect();
     };
   }, []);
 
@@ -146,7 +175,14 @@ export default function ThreeCanvas() {
     <canvas 
       ref={canvasRef} 
       className="three-canvas" 
-      style={{ width: '100%', height: '100%', display: 'block' }}
+      style={{ 
+        position: 'absolute',
+        inset: 0,
+        width: '100%', 
+        height: '100%', 
+        display: 'block',
+        pointerEvents: 'none',
+      }}
     />
   );
 }

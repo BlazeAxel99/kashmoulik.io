@@ -20,12 +20,12 @@
 }
 
 [data-theme="light"] {
-  /* Elegant Light Mode variables */
-  --bg-color: #f8fafc;
-  --bg-card: rgba(255, 255, 255, 0.65);
-  --bg-card-hover: rgba(255, 255, 255, 0.85);
-  --border-color: rgba(15, 23, 42, 0.06);
-  --border-hover: rgba(2, 132, 199, 0.25);
+  /* Warm, distinct Light Mode — NOT just "invert dark" */
+  --bg-color: #faf8f5;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-card-hover: rgba(255, 255, 255, 0.9);
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-hover: rgba(2, 132, 199, 0.3);
   --accent-cyan: #0284c7;
   --accent-teal: #0f766e;
   --accent-blue: #1d4ed8;
@@ -33,13 +33,17 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  --shadow-color: rgba(15, 23, 42, 0.04);
+  --shadow-color: rgba(15, 23, 42, 0.06);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -87,8 +91,9 @@ body {
 }
 
 [data-theme="light"] .aurora-blob {
-  opacity: 0.06;
+  opacity: 0.1;
   mix-blend-mode: multiply;
+  filter: blur(80px);
 }
 
 .aurora-blob-1 {
@@ -112,15 +117,9 @@ body {
 }
 
 @keyframes float-blob {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(8%, -6%) scale(1.1);
-  }
-  100% {
-    transform: translate(-5%, 8%) scale(0.95);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8%, -6%) scale(1.1); }
+  100% { transform: translate(-5%, 8%) scale(0.95); }
 }
 
 /* Layout */
@@ -128,18 +127,50 @@ body {
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 6rem;
+  padding: 0 1.5rem 6rem;
   position: relative;
   z-index: 1;
 }
 
-/* Navigation bar */
+/* ============================================
+   NAVIGATION — Sticky glassmorphic with scroll
+   ============================================ */
 .top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 0;
-  margin-bottom: 4rem;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  background: transparent;
+  transition: var(--transition-premium);
+}
+
+/* JS-toggled class when scrolled */
+.top-nav.scrolled {
+  background: rgba(3, 5, 12, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 0;
+}
+
+[data-theme="light"] .top-nav.scrolled {
+  background: rgba(250, 248, 245, 0.8);
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  z-index: 101;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
 }
 
 .logo {
@@ -239,12 +270,29 @@ section {
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }
 
-/* Hero Section */
-.hero-wrapper {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 2rem;
+/* ============================================
+   HERO SECTION — Full-width canvas background
+   ============================================ */
+.hero-section {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
   align-items: center;
+}
+
+.hero-canvas-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
   min-height: 70vh;
 }
 
@@ -252,6 +300,7 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-width: 620px;
 }
 
 .hero-badge {
@@ -270,10 +319,10 @@ section {
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: 4rem;
+  font-size: 4.5rem;
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
   margin-bottom: 1.5rem;
 }
 
@@ -338,12 +387,9 @@ section {
   border-color: var(--text-secondary);
 }
 
-.hero-visual {
-  height: 400px;
-  position: relative;
-}
-
-/* Bento Stats Grid */
+/* ============================================
+   BENTO STATS GRID
+   ============================================ */
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -394,13 +440,13 @@ section {
   padding: 0.35rem 0.65rem;
   font-size: 0.8rem;
   color: var(--text-secondary);
+  transition: var(--transition-premium);
 }
 
-.github-activity-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+.bento-tech-tag:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.05);
 }
 
 .pulse-dot {
@@ -418,7 +464,9 @@ section {
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(100, 255, 218, 0); }
 }
 
-/* Featured Work */
+/* ============================================
+   FEATURED WORK
+   ============================================ */
 .work-item {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -476,14 +524,36 @@ section {
   margin-bottom: 1.5rem;
 }
 
+/* Architecture diagram container — LARGER & more visible */
 .work-diagram-container {
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 20px;
   background: rgba(10, 15, 30, 0.35);
   border: 1px solid var(--border-color);
+  transition: var(--transition-premium);
 }
 
-/* Timeline */
+.work-diagram-container:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 32px rgba(0, 242, 254, 0.08);
+}
+
+[data-theme="light"] .work-diagram-container {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.arch-diagram-wrapper {
+  width: 100%;
+}
+
+.arch-svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ============================================
+   TIMELINE
+   ============================================ */
 .timeline-flow {
   position: relative;
   padding-left: 2rem;
@@ -513,6 +583,7 @@ section {
   border-radius: 50%;
   background-color: var(--bg-color);
   border: 3px solid var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
 }
 
 .timeline-card {
@@ -560,19 +631,33 @@ section {
   margin-bottom: 0.5rem;
 }
 
-/* Infinite Marquee */
+/* ============================================
+   CERTIFICATIONS MARQUEE — Fade edges + hover pause
+   ============================================ */
+.certifications-section {
+  overflow: hidden;
+}
+
 .marquee-container {
   overflow: hidden;
   white-space: nowrap;
   display: flex;
   position: relative;
   width: 100%;
+  /* Fade edges — the key polish */
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
 }
 
 .marquee-content {
   display: inline-flex;
   gap: 2rem;
-  animation: marquee 25s linear infinite;
+  animation: marquee 30s linear infinite;
+}
+
+/* Hover-pause */
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
 }
 
 .marquee-tag {
@@ -588,6 +673,12 @@ section {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: var(--transition-premium);
+}
+
+.marquee-tag:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.1);
 }
 
 @keyframes marquee {
@@ -595,7 +686,9 @@ section {
   100% { transform: translate3d(-50%, 0, 0); }
 }
 
-/* Contact Footer */
+/* ============================================
+   CONTACT FOOTER
+   ============================================ */
 .contact-section {
   text-align: center;
   padding: 4rem 2rem;
@@ -641,49 +734,95 @@ section {
   box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
 }
 
-/* Responsive constraints */
+/* ============================================
+   RESPONSIVE — Mobile First Fixes
+   ============================================ */
 @media screen and (max-width: 900px) {
   .hero-wrapper {
-    grid-template-columns: 1fr;
+    justify-content: center;
     text-align: center;
   }
-  
+
+  .hero-info {
+    align-items: center;
+  }
+
   .hero-badge, .hero-ctas {
     align-self: center;
   }
-  
+
   .hero-title {
     font-size: 3rem;
   }
-  
+
+  .hero-description {
+    text-align: center;
+  }
+
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .work-item {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
-  .work-item.reverse {
-    direction: ltr;
+
+  .work-item.reverse > :first-child,
+  .work-item.reverse > :last-child {
+    order: unset;
+  }
+
+  .timeline-header-flow {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
 @media screen and (max-width: 600px) {
+  .portfolio-root {
+    padding: 0 1rem 4rem;
+  }
+
   .bento-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .col-span-2 {
     grid-column: span 1;
   }
-  
+
+  .hero-section {
+    min-height: 70vh;
+  }
+
   .hero-title {
     font-size: 2.5rem;
   }
-  
+
   .contact-headline {
     font-size: 2.25rem;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .escape-hatch-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  section {
+    margin-bottom: 4rem;
+  }
+
+  .work-item {
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
   }
 }

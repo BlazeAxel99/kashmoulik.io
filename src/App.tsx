@@ -56,10 +56,23 @@ const DecryptText = ({ text }: { text: string }) => {
 // ==========================================
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [navScrolled, setNavScrolled] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+      setNavScrolled(scrollTop > 50);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
@@ -87,8 +100,11 @@ export default function App() {
       </div>
 
       <div className="portfolio-root">
+        {/* Scroll Progress Bar */}
+        <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
+
         {/* Navigation */}
-        <nav className="top-nav">
+        <nav className={`top-nav${navScrolled ? ' scrolled' : ''}`}>
           <div className="logo">km.io</div>
           <div className="nav-actions">
             <button className="theme-toggle-nav" onClick={toggleTheme} aria-label="Toggle theme">
@@ -106,6 +122,9 @@ export default function App() {
 
         {/* Hero Section */}
         <section className="hero-section">
+          <div className="hero-canvas-bg">
+            <ThreeCanvas />
+          </div>
           <div className="hero-wrapper">
             <motion.div 
               className="hero-info"
@@ -130,9 +149,6 @@ export default function App() {
                 </a>
               </div>
             </motion.div>
-            <div className="hero-visual">
-              <ThreeCanvas />
-            </div>
           </div>
         </section>
 
