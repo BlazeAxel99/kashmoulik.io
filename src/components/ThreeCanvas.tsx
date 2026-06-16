@@ -67,10 +67,53 @@ export default function ThreeCanvas() {
     const connectionDist = 180;
 
     // Cache color values outside render loop
-    let cachedCyan = '#00f2fe';
+    let r = 0;
+    let g = 242;
+    let b = 254;
     let cachedIsDark = true;
+
+    const parseCssColor = (colorStr: string): { r: number; g: number; b: number } => {
+      const cleanStr = colorStr.trim().toLowerCase();
+      
+      // Check if it's rgb(...) or rgba(...)
+      if (cleanStr.startsWith('rgb')) {
+        const matches = cleanStr.match(/\d+/g);
+        if (matches && matches.length >= 3) {
+          return {
+            r: parseInt(matches[0], 10),
+            g: parseInt(matches[1], 10),
+            b: parseInt(matches[2], 10)
+          };
+        }
+      }
+      
+      // Check if it's hex
+      const cleanHex = cleanStr.replace('#', '');
+      if (cleanHex.length === 3) {
+        return {
+          r: parseInt(cleanHex[0] + cleanHex[0], 16),
+          g: parseInt(cleanHex[1] + cleanHex[1], 16),
+          b: parseInt(cleanHex[2] + cleanHex[2], 16)
+        };
+      }
+      if (cleanHex.length === 6) {
+        return {
+          r: parseInt(cleanHex.substring(0, 2), 16),
+          g: parseInt(cleanHex.substring(2, 4), 16),
+          b: parseInt(cleanHex.substring(4, 6), 16)
+        };
+      }
+      
+      // Fallback
+      return { r: 0, g: 242, b: 254 };
+    };
+
     const updateColors = () => {
-      cachedCyan = getComputedStyle(document.documentElement).getPropertyValue('--accent-cyan').trim() || '#00f2fe';
+      const accentCyan = getComputedStyle(document.documentElement).getPropertyValue('--accent-cyan').trim() || '#00f2fe';
+      const parsed = parseCssColor(accentCyan);
+      r = parsed.r;
+      g = parsed.g;
+      b = parsed.b;
       cachedIsDark = document.documentElement.getAttribute('data-theme') !== 'light';
     };
     updateColors();
@@ -106,12 +149,7 @@ export default function ThreeCanvas() {
         p.py = (p.y + my * (p.z / 300)) * scale + height / 2;
       });
 
-      // Parse cyan color for rgba
-      const isLightCyan = cachedCyan.includes('0284c7');
-      const r = isLightCyan ? 2 : 0;
-      const g = isLightCyan ? 132 : 242;
-      const b = isLightCyan ? 199 : 254;
-      const baseAlpha = cachedIsDark ? 1 : 0.6;
+      const baseAlpha = cachedIsDark ? 1.0 : 1.5;
 
       // Draw connections
       ctx.lineWidth = 0.8;
@@ -147,8 +185,8 @@ export default function ThreeCanvas() {
         // Glow for nearby particles
         if (depth > 0.6 && size > 1.5) {
           ctx.beginPath();
-          ctx.arc(p.px!, p.py!, size * 3, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.08})`;
+          ctx.arc(p.px!, p.py!, size * (cachedIsDark ? 3 : 4), 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * (cachedIsDark ? 0.08 : 0.18)})`;
           ctx.fill();
         }
 

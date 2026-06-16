@@ -16,7 +16,7 @@ export default function ArchitectureDiagram({ type }: DiagramProps) {
               <stop offset="100%" stopColor="var(--accent-blue)" stopOpacity="0.8" />
             </linearGradient>
             <filter id="shadowFilter" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="rgba(0, 242, 254, 0.15)" />
+              <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="color-mix(in srgb, var(--accent-cyan) 15%, transparent)" />
             </filter>
             <filter id="nodeGlow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
@@ -65,16 +65,16 @@ export default function ArchitectureDiagram({ type }: DiagramProps) {
           {/* Node 2: Copilot Studio / Realtime GPT */}
           <g transform="translate(140, 45)">
             <rect width="120" height="110" rx="16" fill="var(--bg-card)" stroke="var(--accent-cyan)" strokeWidth="1.5" filter="url(#shadowFilter)" />
-            <circle cx="60" cy="38" r="18" fill="rgba(0, 242, 254, 0.08)" />
+            <circle cx="60" cy="38" r="18" fill="color-mix(in srgb, var(--accent-cyan) 8%, transparent)" />
             <path d="M52 38 H68 M60 30 V46" stroke="var(--accent-cyan)" strokeWidth="2.5" strokeLinecap="round" />
             <text x="60" y="76" fill="var(--text-primary)" fontSize="13" textAnchor="middle" fontWeight="bold">Copilot Studio</text>
             <text x="60" y="92" fill="var(--text-muted)" fontSize="11" textAnchor="middle">GPT-4o Realtime</text>
           </g>
-
+          
           {/* Node 3: Enterprise Hub (FastAPI) */}
           <g transform="translate(300, 45)">
             <rect width="120" height="110" rx="16" fill="var(--bg-card)" stroke="var(--accent-blue)" strokeWidth="1.5" />
-            <circle cx="60" cy="38" r="18" fill="rgba(79, 172, 254, 0.08)" />
+            <circle cx="60" cy="38" r="18" fill="color-mix(in srgb, var(--accent-blue) 8%, transparent)" />
             <rect x="50" y="28" width="20" height="20" rx="4" stroke="var(--accent-blue)" strokeWidth="2.5" fill="none" />
             <text x="60" y="76" fill="var(--text-primary)" fontSize="13" textAnchor="middle" fontWeight="bold">FastAPI Hub</text>
             <text x="60" y="92" fill="var(--text-muted)" fontSize="11" textAnchor="middle">Integration APIs</text>
@@ -105,7 +105,7 @@ export default function ArchitectureDiagram({ type }: DiagramProps) {
             <stop offset="100%" stopColor="var(--accent-cyan)" stopOpacity="0.8" />
           </linearGradient>
           <filter id="tealGlow" x="-10%" y="-10%" width="120%" height="120%">
-            <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="rgba(100, 255, 218, 0.12)" />
+            <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="color-mix(in srgb, var(--accent-teal) 12%, transparent)" />
           </filter>
         </defs>
 
@@ -150,7 +150,7 @@ export default function ArchitectureDiagram({ type }: DiagramProps) {
         {/* Node 2: AST Analysis Engine */}
         <g transform="translate(140, 45)">
           <rect width="120" height="110" rx="16" fill="var(--bg-card)" stroke="var(--accent-teal)" strokeWidth="1.5" filter="url(#tealGlow)" />
-          <circle cx="60" cy="38" r="18" fill="rgba(100, 255, 218, 0.08)" />
+          <circle cx="60" cy="38" r="18" fill="color-mix(in srgb, var(--accent-teal) 8%, transparent)" />
           <path d="M48 44 L56 32 L64 44 M56 32 V48" stroke="var(--accent-teal)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           <text x="60" y="76" fill="var(--text-primary)" fontSize="13" textAnchor="middle" fontWeight="bold">AST Analyzer</text>
           <text x="60" y="92" fill="var(--text-muted)" fontSize="11" textAnchor="middle">Code Ingestion</text>
@@ -159,7 +159,7 @@ export default function ArchitectureDiagram({ type }: DiagramProps) {
         {/* Node 3: Context Packing Engine */}
         <g transform="translate(300, 45)">
           <rect width="120" height="110" rx="16" fill="var(--bg-card)" stroke="var(--accent-cyan)" strokeWidth="1.5" />
-          <circle cx="60" cy="38" r="18" fill="rgba(0, 242, 254, 0.08)" />
+          <circle cx="60" cy="38" r="18" fill="color-mix(in srgb, var(--accent-cyan) 8%, transparent)" />
           <path d="M48 28 H72 V48 H48 Z" stroke="var(--accent-cyan)" strokeWidth="2.5" fill="none" />
           <path d="M54 38 L60 44 L66 38" stroke="var(--accent-cyan)" strokeWidth="2.5" fill="none" />
           <text x="60" y="76" fill="var(--text-primary)" fontSize="13" textAnchor="middle" fontWeight="bold">Context Packer</text>

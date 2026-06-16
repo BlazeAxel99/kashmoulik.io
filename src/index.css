@@ -12,6 +12,7 @@
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
+  --btn-primary-text: #03050c;
   --shadow-color: rgba(0, 0, 0, 0.6);
   --glass-blur: blur(20px);
   --font-heading: 'Outfit', sans-serif;
@@ -20,20 +21,21 @@
 }
 
 [data-theme="light"] {
-  /* Warm, distinct Light Mode — NOT just "invert dark" */
-  --bg-color: #faf8f5;
-  --bg-card: rgba(255, 255, 255, 0.7);
-  --bg-card-hover: rgba(255, 255, 255, 0.9);
-  --border-color: rgba(15, 23, 42, 0.08);
-  --border-hover: rgba(2, 132, 199, 0.3);
-  --accent-cyan: #0284c7;
-  --accent-teal: #0f766e;
-  --accent-blue: #1d4ed8;
-  --accent-purple: #6d28d9;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --shadow-color: rgba(15, 23, 42, 0.06);
+  /* Warm, Solar Sunset surprise Light Mode — NOT just "invert dark" */
+  --bg-color: #faf6f0;
+  --bg-card: rgba(255, 253, 250, 0.75);
+  --bg-card-hover: rgba(255, 253, 250, 0.92);
+  --border-color: rgba(120, 110, 90, 0.09);
+  --border-hover: rgba(234, 88, 12, 0.3);
+  --accent-cyan: #ea580c;
+  --accent-teal: #d97706;
+  --accent-blue: #db2777;
+  --accent-purple: #6366f1;
+  --text-primary: #292524;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+  --btn-primary-text: #ffffff;
+  --shadow-color: rgba(120, 110, 90, 0.08);
 }
 
 * {
@@ -91,9 +93,9 @@ body {
 }
 
 [data-theme="light"] .aurora-blob {
-  opacity: 0.1;
+  opacity: 0.14;
   mix-blend-mode: multiply;
-  filter: blur(80px);
+  filter: blur(100px);
 }
 
 .aurora-blob-1 {
@@ -190,7 +192,7 @@ body {
 }
 
 .escape-hatch-btn {
-  background: rgba(255, 255, 255, 0.03);
+  background: color-mix(in srgb, var(--text-primary) 3%, transparent);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   font-family: var(--font-heading);
@@ -207,7 +209,7 @@ body {
 }
 
 .escape-hatch-btn:hover {
-  background: rgba(0, 242, 254, 0.06);
+  background: color-mix(in srgb, var(--accent-cyan) 6%, transparent);
   border-color: var(--accent-cyan);
 }
 
@@ -304,8 +306,8 @@ section {
 }
 
 .hero-badge {
-  background: rgba(0, 242, 254, 0.08);
-  border: 1px solid rgba(0, 242, 254, 0.2);
+  background: color-mix(in srgb, var(--accent-cyan) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 20%, transparent);
   color: var(--accent-cyan);
   padding: 0.35rem 0.85rem;
   border-radius: 30px;
@@ -347,7 +349,7 @@ section {
 .primary-btn {
   background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
   border: none;
-  color: #03050c;
+  color: var(--btn-primary-text);
   font-family: var(--font-heading);
   font-weight: 700;
   padding: 0.85rem 1.75rem;
@@ -362,12 +364,12 @@ section {
 
 .primary-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(0, 242, 254, 0.25);
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--accent-cyan) 25%, transparent);
   filter: brightness(1.1);
 }
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--text-primary) 2%, transparent);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   font-family: var(--font-heading);
@@ -383,7 +385,7 @@ section {
 }
 
 .secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
   border-color: var(--text-secondary);
 }
 
@@ -434,7 +436,7 @@ section {
 }
 
 .bento-tech-tag {
-  background: rgba(255, 255, 255, 0.03);
+  background: color-mix(in srgb, var(--text-primary) 3%, transparent);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 0.35rem 0.65rem;
@@ -446,7 +448,7 @@ section {
 .bento-tech-tag:hover {
   border-color: var(--accent-cyan);
   color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.05);
+  background: color-mix(in srgb, var(--accent-cyan) 5%, transparent);
 }
 
 .pulse-dot {
@@ -513,8 +515,8 @@ section {
 }
 
 .work-stats-badge {
-  background: rgba(100, 255, 218, 0.05);
-  border: 1px solid rgba(100, 255, 218, 0.15);
+  background: color-mix(in srgb, var(--accent-teal) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-teal) 15%, transparent);
   border-radius: 8px;
   padding: 0.5rem 0.85rem;
   color: var(--accent-teal);
@@ -614,7 +616,7 @@ section {
 .timeline-date {
   font-size: 0.8rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.03);
+  background: color-mix(in srgb, var(--text-primary) 3%, transparent);
   padding: 0.25rem 0.65rem;
   border-radius: 30px;
   border: 1px solid var(--border-color);
@@ -717,7 +719,7 @@ section {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--text-primary) 2%, transparent);
   border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -731,7 +733,7 @@ section {
   color: var(--accent-cyan);
   border-color: var(--accent-cyan);
   transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--accent-cyan) 15%, transparent);
 }
 
 /* ============================================
