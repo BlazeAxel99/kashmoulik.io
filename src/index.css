@@ -21,21 +21,21 @@
 }
 
 [data-theme="light"] {
-  /* Warm, Solar Sunset surprise Light Mode — NOT just "invert dark" */
-  --bg-color: #faf6f0;
-  --bg-card: rgba(255, 253, 250, 0.75);
-  --bg-card-hover: rgba(255, 253, 250, 0.92);
-  --border-color: rgba(120, 110, 90, 0.09);
-  --border-hover: rgba(234, 88, 12, 0.3);
-  --accent-cyan: #ea580c;
-  --accent-teal: #d97706;
-  --accent-blue: #db2777;
-  --accent-purple: #6366f1;
-  --text-primary: #292524;
-  --text-secondary: #57534e;
-  --text-muted: #a8a29e;
+  /* Soothing Cool Nordic Slate Light Mode — easy on the eyes */
+  --bg-color: #f1f3f5;
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --bg-card-hover: rgba(255, 255, 255, 0.88);
+  --border-color: rgba(47, 92, 122, 0.08);
+  --border-hover: rgba(58, 124, 165, 0.3);
+  --accent-cyan: #3a7ca5;
+  --accent-teal: #4a7c59;
+  --accent-blue: #2f5c7a;
+  --accent-purple: #5f6c7d;
+  --text-primary: #2b303a;
+  --text-secondary: #5a6270;
+  --text-muted: #8a95a5;
   --btn-primary-text: #ffffff;
-  --shadow-color: rgba(120, 110, 90, 0.08);
+  --shadow-color: rgba(47, 92, 122, 0.05);
 }
 
 * {
