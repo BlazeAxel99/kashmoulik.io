@@ -119,7 +119,7 @@ export default function App() {
                 <span className="text-gradient"><DecryptText text="Kash Moulik" /></span>
               </h1>
               <p className="hero-description">
-                Assistant Manager of AI Engineering at EY. I design and build production-grade Multi-Agent workflows, Model Context Protocol (MCP) servers, and enterprise automation pipelines.
+                Assistant Manager of AI Engineering at EY with 4+ years of experience. I design and build production-grade Multi-Agent workflows, Model Context Protocol (MCP) servers, and enterprise automation pipelines.
               </p>
               <div className="hero-ctas">
                 <a href="#contact" className="primary-btn">
@@ -152,7 +152,7 @@ export default function App() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
             >
-              <span className="bento-metric-large">3.5+</span>
+              <span className="bento-metric-large">4+</span>
               <span className="bento-label">Years of Experience</span>
             </motion.div>
 
@@ -409,6 +409,28 @@ export default function App() {
                 </ul>
               </motion.div>
             </div>
+
+            {/* Timeline Item 4: Mindtree */}
+            <div className="timeline-item">
+              <div className="timeline-dot" />
+              <motion.div 
+                className="glass-panel timeline-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+              >
+                <div className="timeline-header-flow">
+                  <div>
+                    <h3 className="timeline-company">Mindtree (LTIMindtree)</h3>
+                    <span className="timeline-role">Full Stack Developer Intern</span>
+                  </div>
+                  <span className="timeline-date">Mar 2022 – Jun 2022</span>
+                </div>
+                <ul className="timeline-bullets">
+                  <li>Built web application module using Java, Spring Boot, and ReactJS with RBAC, improving data retrieval speed by 20%.</li>
+                </ul>
+              </motion.div>
+            </div>
           </div>
         </section>
 
@@ -455,6 +477,11 @@ export default function App() {
             </a>
           </div>
         </section>
+
+        {/* Footer */}
+        <footer style={{ textAlign: 'center', padding: '2rem 0', borderTop: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+          <p>&copy; 2026 Kash Moulik. Powered by React, TypeScript, and Framer Motion.</p>
+        </footer>
       </div>
     </div>
   );

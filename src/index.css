@@ -427,12 +427,12 @@ section {
   align-items: center;
 }
 
-.work-item.reverse {
-  direction: rtl;
+.work-item.reverse > :first-child {
+  order: 2;
 }
 
-.work-item.reverse .work-content {
-  direction: ltr;
+.work-item.reverse > :last-child {
+  order: 1;
 }
 
 .work-content {
